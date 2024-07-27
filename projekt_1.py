@@ -54,11 +54,11 @@ password = str(input("Password: "))
 name = name_input.lower()
 
 print(line)
-
+number_of_texts = len(TEXTS)
 # Zjistím, jestli zadané údaje odpovídají někomu z registrovaných uživatelů.
 if name in registr_users and registr_users[name] == password:
 # Pokud je uživatel registrovaný, pozdravím jej a umožním mu analyzovat texty.  
-    print(f"Welcome to the app, {name.title()}.\nWe have 3 texts to be analyzed.") 
+    print(f"Welcome to the app, {name.title()}.\nWe have {number_of_texts} texts to be analyzed.") 
 else:
 # Pokud uživatel není registrovaný, upozorním ho a ukončím program.
     print("Unregistered user, terminating the program..")
@@ -67,7 +67,7 @@ else:
 print(line) 
    
 # Vyžádám si od uživatele číslo textu, které chce analyzovat.  
-number = input("Enter a number btw. 1 and 3 to select: ")
+number = input(f"Enter a number btw. 1 and {number_of_texts} to select: ")
 
 print(line)
 
@@ -78,12 +78,22 @@ if not number.isdigit():
 # Pokud uživatel vybere takové číslo textu, které není v zadání, program jej upozorní a skončí.
 else:
     number = int(number) - 1
-    if number not in range(3):
+    if number not in range(len(TEXTS)):
         print("The selected number is not specified in the entry. Terminating the program..")
         exit()
         
+# Výběr textu.
 select_text = TEXTS[number]      
-words = select_text.split()
+# Odstanění nežádoucích znaků.
+punctuation = '''!"#$%&'()*+,-./:;<=>?@^_`{|}~'''
+text_without_punct = ''
+for char in select_text:
+    if char not in punctuation:
+         text_without_punct += char
+
+# Rozdělení slov.
+words = text_without_punct.split()
+
 # Program spočítá, kolik slov je v textu.
 word_count = len(words)
 print(f"There are {word_count} words in the selected text.")
@@ -97,7 +107,7 @@ suma_numbers = 0
 
 # Program spočítá počet slov začínajících velkým písmenem.
 for word in words:
-    if word.istitle():
+    if word[0].isalpha() and word[0].isupper():
         word_count_title += 1
 # Program spočítá počet slov psaných velkými písmeny.
     elif word.isupper():
@@ -114,7 +124,7 @@ for word in words:
 # Vypsání podmínek pro jednotlivé výpočty.
 print(f"There are {word_count_title} titlecase words.")  
 print(f"There are {word_count_upper} uppercase words.")
-print(f"There are {word_count_lower} uppercase words.")
+print(f"There are {word_count_lower} lowercase words.")
 print(f"There are {word_number} numeric strings.")
 print(f"The sum of all the numbers {suma_numbers}.")
 
@@ -137,6 +147,9 @@ for word in words:
 # Graf délek slov / výskyt = počet slov se stejnou délkou.
 for length, frequency in sorted(length_of_words.items()):
     print(f"{length:<3}| {'*' * frequency:<17}|{frequency}")
+
+   
+
 
    
 
